@@ -26,6 +26,7 @@ class IngredientController extends AbstractController
     #[Route('/ingredient', name: 'ingredient_index', methods:['GET'])]
     public function index(IngredientRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
+        //Pagination
         $ingredients = $paginator->paginate(
             $repository->findAll(),
             $request->query->getInt('page', 1), /*page number*/
@@ -37,7 +38,7 @@ class IngredientController extends AbstractController
         'ingredients' => $ingredients
         ]);
     }
-
+//-----------------------------------------------------------------------------------------------------------------------------------
     /**
      * Ce controller permet de montrer un formulaire pour créer un ingrédient
      *
@@ -54,6 +55,7 @@ class IngredientController extends AbstractController
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
         
+        //Validation d'ajout d'un ingrédient "Persistance"
         if ($form->isSubmitted() && $form->isValid()) { 
             $ingredient=$form->getData();
            $manager->persist($ingredient);
@@ -70,7 +72,11 @@ class IngredientController extends AbstractController
             'form' =>$form->createView()
         ]);
     }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Ce controller permet d'edit un ingrédient
+ */
     #[Route('/ingredient/edition/{id}','ingredient.edit',methods:['GET', 'POST'])]
     public function edit(Ingredient $ingredient,Request $request, EntityManagerInterface $manager) : Response{
 
@@ -79,6 +85,7 @@ class IngredientController extends AbstractController
 
         $form->handleRequest($request);
         
+        //Modifie les valeurs de l'ingrédient
         if ($form->isSubmitted() && $form->isValid()) { 
             $ingredient=$form->getData();
            $manager->persist($ingredient);
@@ -96,8 +103,11 @@ class IngredientController extends AbstractController
             'form'=>$form->createView()
         ]);
     }
-
-    #[Route('/ingredient/suppression/{id}','ingredient.delete', methods: ['GET'])]
+//-----------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Ce controller permet de supprimer un ingrédient
+ */
+#[Route('/ingredient/suppression/{id}','ingredient.delete', methods: ['GET'])]
     public function delete(EntityManagerInterface $manager, Ingredient $ingredient) : Response
     {
 

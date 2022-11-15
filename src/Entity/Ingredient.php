@@ -23,6 +23,7 @@ class Ingredient
     private string $name;
 
     #[ORM\Column]
+    #[Assert\Positive()]
     #[Assert\LessThan(200)]
     #[Assert\NotNull()]
     private float $price;
@@ -32,7 +33,7 @@ class Ingredient
     private ?\DateTimeImmutable $createdAt;
 
     /**
-     * Constructor
+     * Constructeur de date
      */
     public function __construct()
     {
@@ -78,5 +79,10 @@ class Ingredient
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }
